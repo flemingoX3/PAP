@@ -5,13 +5,15 @@
 #include <string.h>
 #include <ctype.h>
 
+#define MAXBUF 512
+
 struct event{
     int eventID;
     char *eventName;
     int day;
     int month;
     int year;
-    int startTime;
+    int startTime;  
     int endTime;
     int priority;
     char* notes;
@@ -21,11 +23,12 @@ void prompt(void){
     printf("Command: ");
 }
 
-void removeWhiteSpace (char* line, char newline[]){
+void removeWhiteSpace (char line[]){
     int i = 0; 
     int count = 0;
     int j = 0;
     int length = strlen(line);
+    char newLine[BUFSIZ]; 
     for(i = 0; i < length; i ++){
         if(isspace(line[i])){ 
             count++;
@@ -33,46 +36,46 @@ void removeWhiteSpace (char* line, char newline[]){
     }
     
     printf("Count %d\n", count);
-    printf("Strlen %d\n", (int)strlen(newline));
+    printf("Strlen %d\n", (int)strlen(line));
     i = 0;
     for(i = 0; i < length; i ++){
         if(isspace(line[i]) == 0){
             printf("non space %c\n", line[i]);
-            newline[j] = line[i];
+            newLine[j] = line[i];
             j++;
         }
 
 
     }
-    newline[j] = '\0';
+    newLine[j] = '\0';
+    printf("newLine %s Strlen  %d\n", newLine, (int)strlen(newLine));
+    for (int loop = 0; loop < strlen(newLine); loop++){
+        printf("char %d\n", newLine[loop]);
+    }
+    line = strncpy(line, newLine,strlen(line));
+    for (int loop2 = 0; loop2 < strlen(line); loop2++){
+        printf("\nchar %d", line[loop2]);
+    }
+    printf("line %s\n", line);
+    
     
 }
 
-void trim(char *str)
-{
-   int first, last;
-   first = 0;
-   while (isspace(str[first])) first++;
-   last  = strlen(str)-1;
-   while (isspace(str[last])) last--;
-   int i, j = 0;
-   for (i = first; i <= last; i++) str[j++] = str[i];
-   str[j] = '\0';
-}
+
 
 int main(int argc, char ** argv, char ** envp){
     char line[BUFSIZ];
-    char newline[] = "";
+    printf("BUFSIZ %d\n", BUFSIZ);
     printf("Welcome to the personal assistant\n");
     printf("If you wish to exit at any time, type exit\n");
     prompt();
     while (fgets(line, BUFSIZ, stdin) != NULL){
         //trim(line);
-        removeWhiteSpace(line, newline);
-        if(strcmp(newline,"exit") == 0){
+        removeWhiteSpace(line);
+        if(strcmp(line,"exit") == 0){
             break;
         }
-        printf("LINE WAS %s\n", newline);
+        printf("LINE WAS %s\n", line);
         prompt();
     }
     
